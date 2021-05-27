@@ -10,6 +10,10 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+app.get('/cards', (req, res) => {
+    res.render('card', { prompt: "Who is buried in Grant's tomb?", hint: "Think about whose tomb it is.", colors});
+});
+
 app.get('/hello', (req, res) => {
     res.send('<h1>Hello World!</h1>');
 });
