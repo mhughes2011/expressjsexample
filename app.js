@@ -1,6 +1,9 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+app.use(bodyParser.urlencoded({extended: false}));
 
 //Looks for templates in the views folder by default
 app.set('view engine', 'pug');
@@ -15,7 +18,12 @@ app.get('/cards', (req, res) => {
 });
 
 app.get('/hello', (req, res) => {
-    res.send('<h1>Hello World!</h1>');
+    res.render('hello');
+});
+
+app.post('/hello', (req, res) => {
+    console.dir(req.body);
+    res.render('hello');
 });
 
 app.listen(3000, () => {
