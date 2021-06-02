@@ -10,6 +10,20 @@ app.use(cookieParser());
 //Looks for templates in the views folder by default
 app.set('view engine', 'pug');
 
+//This is next middleware structure.  It runs every time a req comes into the app.  You can pass in multiple functions to one app.use call or utilize several app.use calls.
+app.use((req, res, next) => {
+    req.message = 'This message made it!';
+    next();
+});
+
+app.use((req, res, next) => {
+    console.log(req.message);
+    next();
+});
+
+
+
+
 app.get('/', (req, res) => {
     const name = req.cookies.username;
     if(name) {
