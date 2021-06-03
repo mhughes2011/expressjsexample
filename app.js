@@ -15,7 +15,7 @@ app.use((req, res, next) => {
     console.log('Hello');
     const err = new Error('Oh noes!');
     err.status = 500;
-    next(err);
+    next();
 });
 
 app.use((req, res, next) => {
@@ -56,6 +56,13 @@ app.post('/hello', (req, res) => {
 app.post('/goodbye', (req, res) => {
     res.clearCookie('username');
     res.redirect('/hello');
+});
+
+//This is responsible for creating the error object and handing it off to the error handler below.  This is put towards the end because if all other routes above aren't found then this will be the default 404 error route.
+app.use((req, res, next) => {
+    const e = new Error('Not Found');
+    e.status = 404;
+    next(e);
 });
 
 //This is the error handler middlware.  The error is created on line 16
