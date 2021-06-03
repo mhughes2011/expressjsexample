@@ -12,12 +12,14 @@ app.set('view engine', 'pug');
 
 //This is next middleware structure.  It runs every time a req comes into the app.  You can pass in multiple functions to one app.use call or utilize several app.use calls.
 app.use((req, res, next) => {
-    req.message = 'This message made it!';
-    next();
+    console.log('Hello');
+    const err = new Error('Oh noes!');
+    err.status = 500;
+    next(err);
 });
 
 app.use((req, res, next) => {
-    console.log(req.message);
+    console.log('World');
     next();
 });
 
@@ -54,6 +56,13 @@ app.post('/hello', (req, res) => {
 app.post('/goodbye', (req, res) => {
     res.clearCookie('username');
     res.redirect('/hello');
+});
+
+//This is the error handler middlware.  The error is created on line 16
+app.use((e, req, res, next) => {
+    res.locals.error = e;
+    res.status(e.status);
+    res.render('error');
 });
 
 app.listen(3000, () => {
