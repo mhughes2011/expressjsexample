@@ -10,53 +10,13 @@ app.use(cookieParser());
 //Looks for templates in the views folder by default
 app.set('view engine', 'pug');
 
-//This is next middleware structure.  It runs every time a req comes into the app.  You can pass in multiple functions to one app.use call or utilize several app.use calls.
-app.use((req, res, next) => {
-    console.log('Hello');
-    const err = new Error('Oh noes!');
-    err.status = 500;
-    next();
-});
+//This is used when separating the routes into their own structure
+const mainRoutes = require('./routes/index');
+const cardRoutes = require('./routes/cards');
 
-app.use((req, res, next) => {
-    console.log('World');
-    next();
-});
-
-
-
-
-app.get('/', (req, res) => {
-    const name = req.cookies.username;
-    if(name) {
-        res.render('index', {name: name});
-    } else {
-        res.redirect('/hello');
-    }
-});
-
-app.get('/cards', (req, res) => {
-    res.render('card', { prompt: "Who is buried in Grant's tomb?", hint: "Think about whose tomb it is."});
-});
-
-app.get('/hello', (req, res) => {
-    const name = req.cookies.username;
-    if(name) {
-        res.redirect('/');
-    } else {
-        res.render('hello');
-    }
-});
-
-app.post('/hello', (req, res) => {
-    res.cookie('username', req.body.username);
-    res.redirect('/');
-});
-
-app.post('/goodbye', (req, res) => {
-    res.clearCookie('username');
-    res.redirect('/hello');
-});
+//This implements the use of those routes created above.
+app.use(mainRoutes);
+app.use('/cards', cardRoutes);
 
 //This is responsible for creating the error object and handing it off to the error handler below.  This is put towards the end because if all other routes above aren't found then this will be the default 404 error route.
 app.use((req, res, next) => {
@@ -65,7 +25,7 @@ app.use((req, res, next) => {
     next(e);
 });
 
-//This is the error handler middlware.  The error is created on line 16
+//This is the error handler middleware.  The error is created on line 16
 app.use((e, req, res, next) => {
     res.locals.error = e;
     res.status(e.status);
