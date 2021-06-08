@@ -6,7 +6,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-
+app.use('/static', express.static('public'));
 //Looks for templates in the views folder by default
 app.set('view engine', 'pug');
 
